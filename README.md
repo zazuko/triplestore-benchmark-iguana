@@ -1,5 +1,13 @@
 # Triplestore Benchmark
 
+This uses [Iguana](https://github.com/dice-group/IGUANA) to benchmark triplestores.
+
+## Requirements
+
+- [Docker](https://www.docker.com/)
+- [Docker Compose](https://docs.docker.com/compose/)
+- [Java](https://www.java.com/en/)
+
 ## Quick Start
 
 First, fetch Iguana by using the following command:
@@ -10,3 +18,11 @@ First, fetch Iguana by using the following command:
 
 It will download Iguana from the specified GitHub release into the `iguana` directory.
 The version is specified in the `scripts/fetch-iguana.sh` script.
+
+Then, you can run the benchmark by using the following command:
+
+```sh
+./scripts/scenario-simple.sh
+```
+
+This will start the Fuseki triplestore and run the benchmark with basic data and basic queries.

@@ -14,3 +14,6 @@ rm -f iguana-*.zip iguana-*.zip.*
 wget "https://github.com/dice-group/IGUANA/releases/download/v${IGUANA_VERSION}/iguana-${IGUANA_VERSION}.zip"
 unzip "iguana-${IGUANA_VERSION}.zip"
 rm -f "iguana-${IGUANA_VERSION}.zip"
+chmod +x iguana/start-iguana.sh
+
+exit 0

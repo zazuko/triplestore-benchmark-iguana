@@ -1,0 +1,31 @@
+datasets:
+  - name: "Dataset"
+
+# Your connection
+connections:
+  - name: "Fuseki"
+    # Change this to your actual endpoint you want to use
+    endpoint: "http://localhost:3030/ds/sparql"
+
+# The benchmark task
+tasks:
+  - className: "Stresstest"
+    configuration:
+      # 1 minute (time Limit is in ms)
+      timeLimit: 60000
+      # we are using plain text queries
+      queryHandler:
+        className: "InstancesQueryHandler"
+
+      # create one SPARQL Worker (it's basically a HTTP get worker using the 'query' parameter)
+      # it uses the queries in the specified file as benchmark queries
+      workers:
+        - threads: 1
+          className: "SPARQLWorker"
+          queriesFile: "./queries/simple.sparql"
+
+# tell Iguana where to save your results to
+storages:
+  - className: "NTFileStorage"
+    configuration:
+      fileName: "results/simple.nt"

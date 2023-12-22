@@ -1,0 +1,3 @@
+SELECT * {?s ?p ?o}
+SELECT * {?s ?p ?o} LIMIT 10
+SELECT * {?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?o}
