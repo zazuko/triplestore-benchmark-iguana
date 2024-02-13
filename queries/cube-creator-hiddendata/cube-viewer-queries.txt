@@ -1,0 +1,128 @@
+#pragma describe.strategy cbd
+SELECT ?cube WHERE {
+  ?cube <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://cube.link/Cube> .
+  FILTER (
+    NOT EXISTS { ?cube <http://schema.org/validThrough> ?v0 . }
+  )
+  FILTER (
+    NOT EXISTS { ?cube <http://schema.org/expires> ?v1 . }
+  )
+}
+
+#pragma describe.strategy cbd
+DESCRIBE ?subject WHERE {
+  {
+    BIND(<https://agriculture.ld.admin.ch/foen/rabies> AS ?subject)
+  }
+  UNION
+  {
+    ?subject <http://schema.org/hasPart> <https://agriculture.ld.admin.ch/foen/rabies> .
+  }
+}
+
+#pragma describe.strategy cbd
+DESCRIBE ?subject WHERE {
+  {
+    BIND(<https://environment.ld.admin.ch/foen/holzfluss/2> AS ?subject)
+  }
+  UNION
+  {
+    ?subject <http://schema.org/hasPart> <https://environment.ld.admin.ch/foen/holzfluss/2> .
+  }
+}
+
+#pragma describe.strategy cbd
+DESCRIBE <https://agriculture.ld.admin.ch/foen/rabies/shape>
+
+#pragma describe.strategy cbd
+DESCRIBE <https://environment.ld.admin.ch/foen/holzfluss/2/shape/>
+
+#pragma describe.strategy cbd
+SELECT DISTINCT ?dimension12 ?dimension4 ?dimension0 ?dimension5 ?dimension6 ?dimension7 ?dimension8 ?dimension9 ?dimension1 ?dimension2 ?dimension3 ?dimension11 ?dimension10 WHERE {
+  <https://energy.ld.admin.ch/elcom/electricityprice> <https://cube.link/observationSet> ?observationSet0 .
+  ?observationSet0 <https://cube.link/observation> ?source0 .
+  ?source0 <https://energy.ld.admin.ch/elcom/electricityprice/dimension/category> ?dimension0 .
+  ?source0 <https://energy.ld.admin.ch/elcom/electricityprice/dimension/municipality> ?dimension1 .
+  ?source0 <https://energy.ld.admin.ch/elcom/electricityprice/dimension/operator> ?dimension2 .
+  ?source0 <https://energy.ld.admin.ch/elcom/electricityprice/dimension/period> ?dimension3 .
+  ?source0 <https://energy.ld.admin.ch/elcom/electricityprice/dimension/aidfee> ?dimension4 .
+  ?source0 <https://energy.ld.admin.ch/elcom/electricityprice/dimension/charge> ?dimension5 .
+  ?source0 <https://energy.ld.admin.ch/elcom/electricityprice/dimension/energy> ?dimension6 .
+  ?source0 <https://energy.ld.admin.ch/elcom/electricityprice/dimension/fixcosts> ?dimension7 .
+  ?source0 <https://energy.ld.admin.ch/elcom/electricityprice/dimension/fixcostspercent> ?dimension8 .
+  ?source0 <https://energy.ld.admin.ch/elcom/electricityprice/dimension/gridusage> ?dimension9 .
+  ?source0 <https://energy.ld.admin.ch/elcom/electricityprice/dimension/total> ?dimension10 .
+  ?source0 <https://energy.ld.admin.ch/elcom/electricityprice/dimension/product> ?dimension11 .
+  ?source0 <https://cube.link/observedBy> ?dimension12 .
+}
+GROUP BY ?dimension12 ?dimension4 ?dimension0 ?dimension5 ?dimension6 ?dimension7 ?dimension8 ?dimension9 ?dimension1 ?dimension2 ?dimension3 ?dimension11 ?dimension10 LIMIT 10 OFFSET 0
+
+#pragma describe.strategy cbd
+SELECT DISTINCT ?dimension2 ?dimension0 ?dimension5 ?dimension3 ?dimension4 ?dimension1 WHERE {
+  <https://environment.ld.admin.ch/foen/holzfluss/2> <https://cube.link/observationSet> ?observationSet0 .
+  ?observationSet0 <https://cube.link/observation> ?source0 .
+  ?source0 <http://www.w3.org/2006/time#year> ?dimension0 .
+  ?source0 <https://environment.ld.admin.ch/foen/holzfluss/value> ?dimension1 .
+  ?source0 <http://schema.org/color> ?dimension2 .
+  ?source0 <https://environment.ld.admin.ch/foen/holzfluss/source> ?dimension3 .
+  ?source0 <https://environment.ld.admin.ch/foen/holzfluss/target> ?dimension4 .
+  ?source0 <https://cube.link/observedBy> ?dimension5 .
+}
+GROUP BY ?dimension2 ?dimension0 ?dimension5 ?dimension3 ?dimension4 ?dimension1 LIMIT 10 OFFSET 0
+
+#pragma describe.strategy cbd
+SELECT (COUNT(*) AS ?count) WHERE {
+  {
+    SELECT DISTINCT ?dimension12 ?dimension4 ?dimension0 ?dimension5 ?dimension6 ?dimension7 ?dimension8 ?dimension9 ?dimension1 ?dimension2 ?dimension3 ?dimension11 ?dimension10 WHERE {
+      <https://energy.ld.admin.ch/elcom/electricityprice> <https://cube.link/observationSet> ?observationSet0 .
+      ?observationSet0 <https://cube.link/observation> ?source0 .
+      ?source0 <https://energy.ld.admin.ch/elcom/electricityprice/dimension/category> ?dimension0 .
+      ?source0 <https://energy.ld.admin.ch/elcom/electricityprice/dimension/municipality> ?dimension1 .
+      ?source0 <https://energy.ld.admin.ch/elcom/electricityprice/dimension/operator> ?dimension2 .
+      ?source0 <https://energy.ld.admin.ch/elcom/electricityprice/dimension/period> ?dimension3 .
+      ?source0 <https://energy.ld.admin.ch/elcom/electricityprice/dimension/aidfee> ?dimension4 .
+      ?source0 <https://energy.ld.admin.ch/elcom/electricityprice/dimension/charge> ?dimension5 .
+      ?source0 <https://energy.ld.admin.ch/elcom/electricityprice/dimension/energy> ?dimension6 .
+      ?source0 <https://energy.ld.admin.ch/elcom/electricityprice/dimension/fixcosts> ?dimension7 .
+      ?source0 <https://energy.ld.admin.ch/elcom/electricityprice/dimension/fixcostspercent> ?dimension8 .
+      ?source0 <https://energy.ld.admin.ch/elcom/electricityprice/dimension/gridusage> ?dimension9 .
+      ?source0 <https://energy.ld.admin.ch/elcom/electricityprice/dimension/total> ?dimension10 .
+      ?source0 <https://energy.ld.admin.ch/elcom/electricityprice/dimension/product> ?dimension11 .
+      ?source0 <https://cube.link/observedBy> ?dimension12 .
+    }
+    GROUP BY ?dimension12 ?dimension4 ?dimension0 ?dimension5 ?dimension6 ?dimension7 ?dimension8 ?dimension9 ?dimension1 ?dimension2 ?dimension3 ?dimension11 ?dimension10
+  }
+}
+
+#pragma describe.strategy cbd
+SELECT (COUNT(*) AS ?count) WHERE {
+  {
+    SELECT DISTINCT ?dimension2 ?dimension0 ?dimension5 ?dimension3 ?dimension4 ?dimension1 WHERE {
+      <https://environment.ld.admin.ch/foen/holzfluss/2> <https://cube.link/observationSet> ?observationSet0 .
+      ?observationSet0 <https://cube.link/observation> ?source0 .
+      ?source0 <http://www.w3.org/2006/time#year> ?dimension0 .
+      ?source0 <https://environment.ld.admin.ch/foen/holzfluss/value> ?dimension1 .
+      ?source0 <http://schema.org/color> ?dimension2 .
+      ?source0 <https://environment.ld.admin.ch/foen/holzfluss/source> ?dimension3 .
+      ?source0 <https://environment.ld.admin.ch/foen/holzfluss/target> ?dimension4 .
+      ?source0 <https://cube.link/observedBy> ?dimension5 .
+    }
+    GROUP BY ?dimension2 ?dimension0 ?dimension5 ?dimension3 ?dimension4 ?dimension1
+  }
+}
+
+#pragma describe.strategy cbd
+CONSTRUCT {
+      ?uri <http://schema.org/name> ?label .
+    } where {
+      ?uri <http://schema.org/name> ?label
+      VALUES ?uri { <https://environment.ld.admin.ch/foen/holzfluss/2/Nodes/12>  <https://environment.ld.admin.ch/foen/holzfluss/2/Nodes/16>  <https://ld.admin.ch/office/VII.1.7>  <https://environment.ld.admin.ch/foen/holzfluss/2/Nodes/11>  <https://environment.ld.admin.ch/foen/holzfluss/2/Nodes/18>  <https://environment.ld.admin.ch/foen/holzfluss/2/Nodes/4>  <https://environment.ld.admin.ch/foen/holzfluss/2/Nodes/14>  <https://environment.ld.admin.ch/foen/holzfluss/2/Nodes/1>  <https://environment.ld.admin.ch/foen/holzfluss/2/Nodes/9>  <https://environment.ld.admin.ch/foen/holzfluss/2/Nodes/10>  <https://environment.ld.admin.ch/foen/holzfluss/2/Nodes/6>  <https://environment.ld.admin.ch/foen/holzfluss/2/Nodes/8>  <https://environment.ld.admin.ch/foen/holzfluss/2/Nodes/7>  }
+}
+
+#pragma describe.strategy cbd
+CONSTRUCT {
+      ?uri <http://schema.org/name> ?label .
+    } where {
+      ?uri <http://schema.org/name> ?label
+      VALUES ?uri { <https://environment.ld.admin.ch/foen/holzfluss/2/Nodes/0>  <https://environment.ld.admin.ch/foen/holzfluss/2/Nodes/1>  <https://environment.ld.admin.ch/foen/holzfluss/2/Nodes/2>  <https://environment.ld.admin.ch/foen/holzfluss/2/Nodes/3>  <https://environment.ld.admin.ch/foen/holzfluss/2/Nodes/4>  <https://environment.ld.admin.ch/foen/holzfluss/2/Nodes/5>  <https://environment.ld.admin.ch/foen/holzfluss/2/Nodes/6>  <https://environment.ld.admin.ch/foen/holzfluss/2/Nodes/7>  <https://environment.ld.admin.ch/foen/holzfluss/2/Nodes/8>  <https://environment.ld.admin.ch/foen/holzfluss/2/Nodes/9>  <https://environment.ld.admin.ch/foen/holzfluss/2/Nodes/10>  <https://environment.ld.admin.ch/foen/holzfluss/2/Nodes/11>  <https://environment.ld.admin.ch/foen/holzfluss/2/Nodes/12>  <https://environment.ld.admin.ch/foen/holzfluss/2/Nodes/13>  <https://environment.ld.admin.ch/foen/holzfluss/2/Nodes/14>  <https://environment.ld.admin.ch/foen/holzfluss/2/Nodes/15>  <https://environment.ld.admin.ch/foen/holzfluss/2/Nodes/16>  <https://environment.ld.admin.ch/foen/holzfluss/2/Nodes/18>  <https://environment.ld.admin.ch/foen/holzfluss/2/Nodes/19>  <https://environment.ld.admin.ch/foen/holzfluss/2/Nodes/17>  <https://environment.ld.admin.ch/>  }
+}

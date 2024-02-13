@@ -1,0 +1,46 @@
+datasets:
+  - name: "lindas-cc-hidden-data"
+  # - name: "lindas-baseline"
+
+# Your connection
+connections:
+
+  - name: "lindas-baseline"
+    # endpoint: "https://data.zazuko.com/lindas-cc-baseline/query"
+    endpoint: "http://localhost:8080/lindas-cc-baseline/query"
+    user: "user_public"
+    password: "pass_public"
+
+  - name: "authenticated"
+    # endpoint: "https://data.zazuko.com/lindas-cc-hidden-data/query"
+    endpoint: "http://localhost:8080/lindas-cc-hidden-data/query"
+    user: "user_authenticated"
+    password: "pass_authenticated"
+
+  - name: "public"
+    # endpoint: "https://data.zazuko.com/lindas-cc-hidden-data/query"
+    endpoint: "http://localhost:8080/lindas-cc-hidden-data/query"
+    user: "user_public"
+    password: "pass_public"
+
+# The benchmark task
+tasks:
+  - className: "Stresstest"
+    configuration:
+      # noOfQueryMixes: 1
+      noOfQueryMixes: 20
+      queryHandler:
+        className: "DelimInstancesQueryHandler"
+
+      # create one SPARQL Worker (it's basically a HTTP get worker using the 'query' parameter)
+      # it uses the queries in the specified file as benchmark queries
+      workers:
+        - threads: 1
+          className: "SPARQLWorker"
+          queriesFile: "./queries/cube-creator-hiddendata/cube-viewer-queries.txt"
+
+# tell Iguana where to save your results to
+storages:
+  - className: "NTFileStorage"
+    configuration:
+      fileName: "results/cube-creator-hiddendata.nt"
