@@ -5,21 +5,27 @@ datasets:
 # Your connection
 connections:
 
-  - name: "lindas-baseline"
+  - name: "baseline-public"
     # endpoint: "https://data.zazuko.com/lindas-cc-baseline/query"
-    endpoint: "http://localhost:8080/lindas-cc-baseline/query"
+    endpoint: "http://localhost:80/lindas-cc-baseline/query"
     user: "user_public"
     password: "pass_public"
 
-  - name: "authenticated"
-    # endpoint: "https://data.zazuko.com/lindas-cc-hidden-data/query"
-    endpoint: "http://localhost:8080/lindas-cc-hidden-data/query"
+  - name: "baseline-authenticated"
+    # endpoint: "https://data.zazuko.com/lindas-cc-baseline/query"
+    endpoint: "http://localhost:80/lindas-cc-baseline/query"
     user: "user_authenticated"
     password: "pass_authenticated"
 
-  - name: "public"
+  - name: "hidden-data-authenticated"
     # endpoint: "https://data.zazuko.com/lindas-cc-hidden-data/query"
-    endpoint: "http://localhost:8080/lindas-cc-hidden-data/query"
+    endpoint: "http://localhost:80/lindas-cc-hidden-data/query"
+    user: "user_authenticated"
+    password: "pass_authenticated"
+
+  - name: "hidden-data-public"
+    # endpoint: "https://data.zazuko.com/lindas-cc-hidden-data/query"
+    endpoint: "http://localhost:80/lindas-cc-hidden-data/query"
     user: "user_public"
     password: "pass_public"
 
@@ -27,8 +33,7 @@ connections:
 tasks:
   - className: "Stresstest"
     configuration:
-      # noOfQueryMixes: 1
-      noOfQueryMixes: 20
+      noOfQueryMixes: 100
       queryHandler:
         className: "DelimInstancesQueryHandler"
 

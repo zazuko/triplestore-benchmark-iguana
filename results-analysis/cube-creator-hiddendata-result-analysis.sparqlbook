@@ -1,0 +1,20 @@
+[
+  {
+    "kind": 1,
+    "language": "markdown",
+    "value": "For the datamodel of Iguana experiment results, see http://dice-group.github.io/IGUANA/docs/3.3/usage/results/\n\nFor the Metrics, see: http://dice-group.github.io/IGUANA/docs/3.3/usage/metrics/",
+    "metadata": {}
+  },
+  {
+    "kind": 2,
+    "language": "sparql",
+    "value": "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX iprop: <http://iguana-benchmark.eu/properties/>\nPREFIX iont: <http://iguana-benchmark.eu/class/>\nPREFIX ires: <http://iguana-benchmark.eu/resource/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n\nSELECT ?experiment ?task ?connection ?startDate WHERE {\n    ?experiment iprop:task ?task.\n\n    ?task a iont:Task .\n    ?task rdfs:startDate ?startDate .\n    ?task iprop:connection ?connection .\n}\norder by ?startDate\n",
+    "metadata": {}
+  },
+  {
+    "kind": 2,
+    "language": "sparql",
+    "value": "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX iprop: <http://iguana-benchmark.eu/properties/>\nPREFIX iont: <http://iguana-benchmark.eu/class/>\nPREFIX ires: <http://iguana-benchmark.eu/resource/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n\nSELECT\n?query ?connection\n?avgTime\n?succeeded ?failed ?totalTime ?resultSize\n# ?queryText\n\nWHERE {\n    ?experiment iprop:task ?task.\n\n    ?task a iont:Task .\n    ?task iprop:connection ?connection .\n    ?task iprop:query ?executedQuery .\n\n    ?executedQuery iprop:queryID ?query .\n    ?executedQuery iprop:succeeded ?succeeded .\n    ?executedQuery iprop:failed ?failed .\n    ?executedQuery iprop:totalTime ?totalTime .\n    ?executedQuery iprop:resultSize ?resultSize .\n\n    bind( (?totalTime / ?succeeded) as ?avgTime)\n\n    ?query rdfs:label ?queryText .\n\n    VALUES (?connection ?connection_position) {\n        ( <http://iguana-benchmark.eu/resource/baseline-public> 1 )\n        ( <http://iguana-benchmark.eu/resource/baseline-authenticated> 2 )\n        ( <http://iguana-benchmark.eu/resource/hidden-data-authenticated> 3 )\n        ( <http://iguana-benchmark.eu/resource/hidden-data-public> 4 )\n    }\n    \n}\norder by ?query ?connection_position\n\nVALUES ?experiment {\n    <http://iguana-benchmark.eu/resource/1707921615/1>   # data-zazuko-com 1x\n}",
+    "metadata": {}
+  }
+]
