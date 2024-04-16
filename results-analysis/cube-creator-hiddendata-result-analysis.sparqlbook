@@ -1,0 +1,74 @@
+[
+  {
+    "kind": 1,
+    "language": "markdown",
+    "value": "For the datamodel of Iguana experiment results, see http://dice-group.github.io/IGUANA/docs/3.3/usage/results/\n\nFor the Metrics, see: http://dice-group.github.io/IGUANA/docs/3.3/usage/metrics/",
+    "metadata": {}
+  },
+  {
+    "kind": 1,
+    "language": "markdown",
+    "value": "---\n\nDataset containing the experiment results: results-archive/cube-creator-hiddendata/cube-creator-hiddendata-data-zazuko-com-2024-02-14.nt",
+    "metadata": {}
+  },
+  {
+    "kind": 1,
+    "language": "markdown",
+    "value": "---\n\nFirst, let's get an overview of the experiments and tasks of the benchmark",
+    "metadata": {}
+  },
+  {
+    "kind": 2,
+    "language": "sparql",
+    "value": "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX iprop: <http://iguana-benchmark.eu/properties/>\nPREFIX iont: <http://iguana-benchmark.eu/class/>\nPREFIX ires: <http://iguana-benchmark.eu/resource/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n\nSELECT ?experiment ?task ?connection ?startDate WHERE {\n    ?experiment iprop:task ?task.\n\n    ?task a iont:Task .\n    ?task rdfs:startDate ?startDate .\n    ?task iprop:connection ?connection .\n}\norder by ?startDate\n",
+    "metadata": {}
+  },
+  {
+    "kind": 1,
+    "language": "markdown",
+    "value": "---\n\nNext, we compare two connections (same experiment, same database):\n\n- `baseline-public`: ACL config as it is today (2024-02-15) on LINDAS for the \"public\" user [1]\n\n- `baseline-authenticated`: ACL config explicitly listing permissions for each named-graph [2]\n\n1: https://github.com/zazuko/triplestore-benchmark/blob/cube-creator-hiddendata/datasets/cube-creator-hiddendata/init-lindas-baseline-user-roles.sh#L22-L26\n\n2: https://github.com/zazuko/triplestore-benchmark/blob/cube-creator-hiddendata/datasets/cube-creator-hiddendata/init-lindas-baseline-user-roles.sh#L28-L71\n\nFrom the benchmark results, it seems that configuring ACLs differently in Stardog has an impact on query speed. For all the queries in the benchmark, the average time `avgTime` for one query execution is faster with the current ACL on LINDAS.",
+    "metadata": {}
+  },
+  {
+    "kind": 2,
+    "language": "sparql",
+    "value": "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX iprop: <http://iguana-benchmark.eu/properties/>\nPREFIX iont: <http://iguana-benchmark.eu/class/>\nPREFIX ires: <http://iguana-benchmark.eu/resource/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n\nSELECT\n# ?experiment\n?query ?connection\n?avgTime\n?succeeded ?failed ?totalTime ?resultSize\n# ?queryText\n\nWHERE {\n    ?experiment iprop:task ?task.\n\n    ?task a iont:Task .\n    ?task iprop:connection ?connection .\n    ?task iprop:query ?executedQuery .\n\n    ?executedQuery iprop:queryID ?query .\n    ?executedQuery iprop:succeeded ?succeeded .\n    ?executedQuery iprop:failed ?failed .\n    ?executedQuery iprop:totalTime ?totalTime .\n    ?executedQuery iprop:resultSize ?resultSize .\n\n    bind( (?totalTime / ?succeeded) as ?avgTime)\n\n    ?query rdfs:label ?queryText .\n\n    VALUES (?connection ?connection_position) {\n        ( <http://iguana-benchmark.eu/resource/baseline-public> 1 )\n        ( <http://iguana-benchmark.eu/resource/baseline-authenticated> 2 )\n        ( <http://iguana-benchmark.eu/resource/hidden-data-authenticated> 3 )\n        ( <http://iguana-benchmark.eu/resource/hidden-data-public> 4 )\n    }\n    \n}\norder by ?query ?connection_position ?experiment\n\n# cube-creator-hiddendata-data-zazuko-com-2024-02-14-200834.nt\nVALUES (?experiment ?connection) {\n    ( <http://iguana-benchmark.eu/resource/1707937715/1> <http://iguana-benchmark.eu/resource/baseline-public> )\n    ( <http://iguana-benchmark.eu/resource/1707937715/1> <http://iguana-benchmark.eu/resource/baseline-authenticated> )\n}\n",
+    "metadata": {}
+  },
+  {
+    "kind": 1,
+    "language": "markdown",
+    "value": "---\n\nSame query as before, but different \"lens\" (`VALUES ?experiment`). Also including the results from the MVP database `lindas-cc-hidden-data`",
+    "metadata": {}
+  },
+  {
+    "kind": 2,
+    "language": "sparql",
+    "value": "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX iprop: <http://iguana-benchmark.eu/properties/>\nPREFIX iont: <http://iguana-benchmark.eu/class/>\nPREFIX ires: <http://iguana-benchmark.eu/resource/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n\nSELECT\n# ?experiment\n?query ?connection\n?avgTime\n?succeeded ?failed ?totalTime ?resultSize\n# ?queryText\n\nWHERE {\n    ?experiment iprop:task ?task.\n\n    ?task a iont:Task .\n    ?task iprop:connection ?connection .\n    ?task iprop:query ?executedQuery .\n\n    ?executedQuery iprop:queryID ?query .\n    ?executedQuery iprop:succeeded ?succeeded .\n    ?executedQuery iprop:failed ?failed .\n    ?executedQuery iprop:totalTime ?totalTime .\n    ?executedQuery iprop:resultSize ?resultSize .\n\n    bind( (?totalTime / ?succeeded) as ?avgTime)\n\n    ?query rdfs:label ?queryText .\n\n    VALUES (?connection ?connection_position) {\n        ( <http://iguana-benchmark.eu/resource/baseline-public> 1 )\n        ( <http://iguana-benchmark.eu/resource/baseline-authenticated> 2 )\n        ( <http://iguana-benchmark.eu/resource/hidden-data-authenticated> 3 )\n        ( <http://iguana-benchmark.eu/resource/hidden-data-public> 4 )\n    }\n    \n}\norder by ?query ?connection_position ?experiment\n\n# cube-creator-hiddendata-data-zazuko-com-2024-02-14-200834.nt\nVALUES ?experiment {\n    # <http://iguana-benchmark.eu/resource/1707924367/1>   # data-zazuko-com 4x100\n    <http://iguana-benchmark.eu/resource/1707937715/1>   # data-zazuko-com 4x100\n}\n",
+    "metadata": {}
+  },
+  {
+    "kind": 1,
+    "language": "markdown",
+    "value": "---\n\nComparing impact of having `-Dcom.stardog.execution.nary.graph.union=10` in `STARDOG_SERVER_JAVA_ARGS`",
+    "metadata": {}
+  },
+  {
+    "kind": 2,
+    "language": "sparql",
+    "value": "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX iprop: <http://iguana-benchmark.eu/properties/>\nPREFIX iont: <http://iguana-benchmark.eu/class/>\nPREFIX ires: <http://iguana-benchmark.eu/resource/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n\nSELECT\n# ?experiment\n?query ?connection ?comment\n?avgTime\n?succeeded ?failed ?totalTime ?resultSize\n# ?queryText\n\nWHERE {\n    ?experiment iprop:task ?task.\n\n    ?task a iont:Task .\n    ?task iprop:connection ?connection .\n    ?task iprop:query ?executedQuery .\n\n    ?executedQuery iprop:queryID ?query .\n    ?executedQuery iprop:succeeded ?succeeded .\n    ?executedQuery iprop:failed ?failed .\n    ?executedQuery iprop:totalTime ?totalTime .\n    ?executedQuery iprop:resultSize ?resultSize .\n\n    bind( (?totalTime / ?succeeded) as ?avgTime)\n\n    ?query rdfs:label ?queryText .\n\n    VALUES (?connection ?connection_position) {\n        ( <http://iguana-benchmark.eu/resource/baseline-public> 1 )\n        ( <http://iguana-benchmark.eu/resource/baseline-authenticated> 2 )\n        ( <http://iguana-benchmark.eu/resource/hidden-data-authenticated> 3 )\n        ( <http://iguana-benchmark.eu/resource/hidden-data-public> 4 )\n    }\n    \n}\norder by ?query ?connection_position ?experiment\n\n# cube-creator-hiddendata-data-zazuko-com-2024-02-14-200834.nt\n# cube-creator-hiddendata-data-zazuko-com-2024-03-12-133807.nt\nVALUES (?experiment ?connection ?comment) {\n\n    # show all\n    # ( <http://iguana-benchmark.eu/resource/1707937715/1> <http://iguana-benchmark.eu/resource/baseline-public> \"\" )\n    # ( <http://iguana-benchmark.eu/resource/1707937715/1> <http://iguana-benchmark.eu/resource/baseline-authenticated> \"\" )\n    # ( <http://iguana-benchmark.eu/resource/1710247088/1> <http://iguana-benchmark.eu/resource/baseline-public> \"nary.graph.union=10\" )\n    # ( <http://iguana-benchmark.eu/resource/1710247088/1> <http://iguana-benchmark.eu/resource/baseline-authenticated> \"nary.graph.union=10\" )\n\n    # show only extremes => in all cases using explicit ACL is slower than baseline-public\n    ( <http://iguana-benchmark.eu/resource/1707937715/1> <http://iguana-benchmark.eu/resource/baseline-public> \"\" )\n    ( <http://iguana-benchmark.eu/resource/1710247088/1> <http://iguana-benchmark.eu/resource/baseline-authenticated> \"nary.graph.union=10\" )\n\n    # show only improvements on ACL => 5 are slower, 6 are faster\n    # ( <http://iguana-benchmark.eu/resource/1707937715/1> <http://iguana-benchmark.eu/resource/baseline-authenticated> \"\" )\n    # ( <http://iguana-benchmark.eu/resource/1710247088/1> <http://iguana-benchmark.eu/resource/baseline-authenticated> \"nary.graph.union=10\" )\n}",
+    "metadata": {}
+  },
+  {
+    "kind": 1,
+    "language": "markdown",
+    "value": "----\nLet's see the impact on the total duration of the benchmark ...",
+    "metadata": {}
+  },
+  {
+    "kind": 2,
+    "language": "sparql",
+    "value": "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX iprop: <http://iguana-benchmark.eu/properties/>\nPREFIX iont: <http://iguana-benchmark.eu/class/>\nPREFIX ires: <http://iguana-benchmark.eu/resource/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n\nSELECT ?experiment ?task ?connection ?comment ?duration WHERE {\n    ?experiment iprop:task ?task.\n\n    ?task a iont:Task .\n    ?task rdfs:startDate ?startDate .\n    ?task rdfs:endDate ?endDate .\n    ?task iprop:connection ?connection .\n\n    bind(?endDate - ?startDate as ?duration)\n\n    VALUES (?connection ?connection_position) {\n        ( <http://iguana-benchmark.eu/resource/baseline-public> 1 )\n        ( <http://iguana-benchmark.eu/resource/baseline-authenticated> 2 )\n        ( <http://iguana-benchmark.eu/resource/hidden-data-authenticated> 3 )\n        ( <http://iguana-benchmark.eu/resource/hidden-data-public> 4 )\n    }\n    \n}\norder by ?connection_position ?experiment\n\n# cube-creator-hiddendata-data-zazuko-com-2024-02-14-200834.nt\n# cube-creator-hiddendata-data-zazuko-com-2024-03-12-133807.nt\nVALUES (?experiment ?connection ?comment) {\n\n    # show all\n    # ( <http://iguana-benchmark.eu/resource/1707937715/1> <http://iguana-benchmark.eu/resource/baseline-public> \"\" )\n    # ( <http://iguana-benchmark.eu/resource/1707937715/1> <http://iguana-benchmark.eu/resource/baseline-authenticated> \"\" )\n    # ( <http://iguana-benchmark.eu/resource/1710247088/1> <http://iguana-benchmark.eu/resource/baseline-public> \"nary.graph.union=10\" )\n    # ( <http://iguana-benchmark.eu/resource/1710247088/1> <http://iguana-benchmark.eu/resource/baseline-authenticated> \"nary.graph.union=10\" )\n\n    # total benchmark duration using explicit ACL is 44% more than baseline-public, thus slower\n    ( <http://iguana-benchmark.eu/resource/1707937715/1> <http://iguana-benchmark.eu/resource/baseline-public> \"\" )\n    ( <http://iguana-benchmark.eu/resource/1710247088/1> <http://iguana-benchmark.eu/resource/baseline-authenticated> \"nary.graph.union=10\" )\n\n    # show only impact on public scenario => total benchmark  duration is 20% less, thus faster\n    # ( <http://iguana-benchmark.eu/resource/1707937715/1> <http://iguana-benchmark.eu/resource/baseline-public> \"\" )\n    # ( <http://iguana-benchmark.eu/resource/1710247088/1> <http://iguana-benchmark.eu/resource/baseline-public> \"nary.graph.union=10\" )\n\n    # show only impact on ACL scenario => total benchmark duration is 30% less, thus faster\n    # ( <http://iguana-benchmark.eu/resource/1707937715/1> <http://iguana-benchmark.eu/resource/baseline-authenticated> \"\" )\n    # ( <http://iguana-benchmark.eu/resource/1710247088/1> <http://iguana-benchmark.eu/resource/baseline-authenticated> \"nary.graph.union=10\" )\n}",
+    "metadata": {}
+  }
+]

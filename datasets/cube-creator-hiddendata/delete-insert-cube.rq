@@ -1,0 +1,82 @@
+PREFIX cube: <https://cube.link/>
+PREFIX sh: <http://www.w3.org/ns/shacl#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+# This query moves cubes into their 'hidden' named-graph
+# The cubes to be moved are parametrized using VALUES statement (at the bottom)
+
+delete {
+  graph ?g {
+    ?cube a cube:Cube ;
+            cube:observationConstraint ?shape ;
+            cube:observationSet ?set ;
+            ?p1 ?metaLevel1 .
+
+    ?metaLevel1 ?p2 ?metaLevel2 .
+    
+    ?shape ?shapeP ?shapeO .
+    ?propertyS ?propertyP ?propertyO .
+    
+    ?set cube:observation ?observationS .
+    ?observationS ?observationP ?observationO .
+  }
+}
+insert {
+  graph ?hiddenGraph {
+    ?cube a cube:Cube ;
+    cube:observationConstraint ?shape ;
+    cube:observationSet ?set ;
+    ?p1 ?metaLevel1 .
+
+    ?metaLevel1 ?p2 ?metaLevel2 .
+    
+    ?shape ?shapeP ?shapeO .
+    ?propertyS ?propertyP ?propertyO .
+    
+    ?set cube:observation ?observationS .
+    ?observationS ?observationP ?observationO .
+  }
+}
+WHERE  
+{ 
+    graph ?g {
+        ?cube  rdf:type  cube:Cube
+
+        { # Cube's direct metadata
+            ?cube  ?p1  ?metaLevel1
+            OPTIONAL
+            { # Second level of metadata in blank nodes
+                ?metaLevel1  ?p2  ?metaLevel2
+                FILTER isBlank(?metaLevel1)
+            }
+        }
+        UNION
+        { # Constraint Shape properties
+            ?cube   cube:observationConstraint  ?shape .
+            ?shape  ?shapeP               ?shapeO
+        }
+        UNION
+        { # Property Shape properties need to be queried deep to get RDF Lists
+            ?cube cube:observationConstraint/sh:property ?property .
+            ?property (<>|!<>)* ?propertyS .
+            ?propertyS  ?propertyP  ?propertyO
+        }
+        UNION
+        { # Actual observation data
+            ?cube     cube:observationSet  ?set .
+            ?set      cube:observation     ?observationS .
+            ?observationS
+                    ?observationP        ?observationO
+      }
+
+      bind(iri(concat(str(?g), "/hidden")) as ?hiddenGraph)
+    }
+    
+VALUES (?g ?cube) {
+    ( <https://lindas.admin.ch/foen/cube> <https://environment.ld.admin.ch/foen/ubd000502/1> )
+    ( <https://lindas.admin.ch/foen/cube> <https://environment.ld.admin.ch/foen/ubd000502/2> )
+    ( <https://lindas.admin.ch/foen/cube> <https://environment.ld.admin.ch/foen/ubd000502/3> )
+    ( <https://lindas.admin.ch/foen/cube> <https://environment.ld.admin.ch/foen/ubd000502/4> )
+}
+}
+
